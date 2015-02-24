@@ -20,14 +20,21 @@ module Sensu
         puts "Sensu::Plugin::CLI: #{args}"
       end
 
+
+      def exit_message(status, code, *args)
+        @status = status
+        output(*args)
+        exit(code)
+      end
+
+
       # This will define 'ok', 'warning', 'critical', and 'unknown'
       # methods, which the plugin should call to exit.
 
+
       Sensu::Plugin::EXIT_CODES.each do |status, code|
         define_method(status.downcase) do |*args|
-          @status = status
-          output(*args)
-          exit(code)
+          exit_message(status, code, *args)
         end
       end
 
